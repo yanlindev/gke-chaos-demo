@@ -74,12 +74,17 @@ canvas {
     font-weight: bold;
     font-size: 1.1em;
 }
+
 table {
     padding: 0%;
     border-color: darkslategray;
     border-width: 1px;
     width: 100%;
     height: 80%;
+}
+td {
+    background-clip: padding-box; /* this has been added */
+    border-radius: 5px;
 }
 
 .running {
@@ -94,6 +99,13 @@ table {
     background-color: palegreen;
 }
 
+#preview_iframe {
+    display: block;       /* iframes are inline by default */
+    background: #000;
+    border: none;
+    height: 100vh;        /* Viewport-relative units */
+    width: 100vw;
+}
 
 .status {
     grid-column: 1 / 3;
