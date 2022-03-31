@@ -1,0 +1,22 @@
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: managed-cert-east
+spec:
+  domains:
+    - east.demo.therickstuff.com
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: managed-cert-ingress-east
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: frontend-east
+    networking.gke.io/managed-certificates: managed-cert-east
+    kubernetes.io/ingress.class: "gce"
+spec:
+  defaultBackend:
+    service:
+      name: frontend
+      port:
+        number: 80

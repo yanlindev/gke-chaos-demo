@@ -213,6 +213,7 @@ spec:
     metadata:
       labels:
         app: frontend
+        chaos: notfound
       annotations:
         sidecar.istio.io/rewriteAppHTTPProbers: "true"
     spec:

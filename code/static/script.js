@@ -52,7 +52,6 @@ function node_click(instance,zone) {
 
 // Populate Node Table
 function loadNodeTable(data) {
-    var Table = document.getElementById("nodes");
     $("#nodes>tbody").empty()
 
     // Get the instance data
@@ -165,7 +164,6 @@ function loadPodTable(data) {
                 current_row += " class='terminating'";
             }
 
-            // Wrap up cell
             current_row +="></td>";
             current_count += 1;
         }

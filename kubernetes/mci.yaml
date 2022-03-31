@@ -1,12 +1,15 @@
+
 apiVersion: networking.gke.io/v1
 kind: MultiClusterIngress
 metadata:
   name: frontend-mcs-ingress
   annotations:
-    networking.gke.io/static-ip: 34.111.51.63
+    networking.gke.io/static-ip: 34.111.123.168
 spec:
   template:
     spec:
       backend:
         serviceName: frontend-mcs
         servicePort: 80
+      tls:
+      - secretName: global-demo-rickstuff-com-ssl

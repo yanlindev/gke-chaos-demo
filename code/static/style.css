@@ -83,8 +83,10 @@ table {
     height: 80%;
 }
 td {
-    background-clip: padding-box; /* this has been added */
+    background-clip: padding-box; 
     border-radius: 5px;
+    text-align: left;
+    font-size: 0.5em;
 }
 
 .running {

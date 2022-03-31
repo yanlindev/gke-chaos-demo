@@ -22,7 +22,8 @@ def GetPods():
 
             # Get Pods
             v1 = client.CoreV1Api()
-            pods = v1.list_namespaced_pod("hipster")
+            label_selector = "chaos != notfound"
+            pods = v1.list_namespaced_pod("hipster",label_selector=label_selector)
             # Itterate Over Found Pods
             for i in pods.items:
                 # Add Pod to Results
