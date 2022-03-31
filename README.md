@@ -15,3 +15,15 @@ Run the following command
 ```
 deactivate
 ```
+
+## Config
+Config is either via local file [config.json](code/config.json) or recreating with environmental variables:<br />
+**EXAMPLE:**
+```bash
+GCP_PROJECT='MyGCPProject'
+GKE_CLUSTERS=[['gke-cluster-1', 'us-west1'],['gke-cluster-2', 'us-east1']]
+DASHBOARD_URL='https://dashboardurl.com'
+SITE_URLS=['https://sitehomepage.com/','https://sitehomepage.com/cart','https://sitehomepage.com/product/123']
+LOAD_TEST_URL='https://sitehomepage.com'
+LOAD_TEST_USER_BUMP=50
+```
