@@ -11,11 +11,15 @@ def GetServices():
     for aCluster in config.gke_clusters:
         print(f"{aCluster[0]}, {aCluster[1]}")
         cluster = cluster_manager_client.get_cluster(name=f'projects/{config.gcp_project}/locations/{aCluster[1]}/clusters/{aCluster[0]}')
+
+        
         configuration = client.Configuration()
         configuration.host = f"https://{cluster.endpoint}:443"
         configuration.verify_ssl = False
-        configuration.api_key = {"authorization": "Bearer " + config.credentials.token}
+        configuration.api_key = {"authorization": "Bearer " + config.credentials.refresh_token}
+        print(configuration.api_key)
         client.Configuration.set_default(configuration)
+
 
         v1 = client.CoreV1Api()
         print("Listing services:")
@@ -25,8 +29,8 @@ def GetServices():
             print(i)
             cluster_results.append(i.metadata.name)
         
-        # Add Pod result set to return result
-        results[aCluster] = cluster_results
+        # # Add Pod result set to return result
+        # results[aCluster] = cluster_results
 
     # Return results
     return results

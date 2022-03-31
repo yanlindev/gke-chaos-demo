@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, redirect
 import json
 from handlers.helpers import helpers
 from handlers.gcp import gcp
-from handlers.kubernetes import kubernetes
+from handlers.kubernetes import k8s
 from handlers.loadgen import loadgen
 import config
 
@@ -62,7 +62,7 @@ def removeinstance():
 @app.route("/list-services", methods=['GET'])
 def listservices():
     # API End Point for get all instances
-    result = kubernetes.GetServices()
+    result = k8s.GetServices()
 
     # Validate result
     if len(result) > 0:
@@ -76,7 +76,7 @@ def remove_pod_in_service():
     service = request.form['gke_service']
     cluster = request.form['gke_cluster']
 
-    result = kubernetes.kuberKillPod(service_name=service,cluster_name=cluster)
+    result = k8s.kuberKillPod(service_name=service,cluster_name=cluster)
 
     if result:
         return json.dumps({'success':True}), 201, {'ContentType':'application/json'} 
@@ -108,6 +108,6 @@ if __name__ == "__main__":
     gcp.configure_gcp()
     helpers.GetConfig()
     ## Run APP
-    #GetServices()
+    #k8s.GetServices()
 
     app.run(host='0.0.0.0', port=8080, debug=True)

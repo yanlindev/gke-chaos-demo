@@ -1,9 +1,9 @@
-from googleapiclient import discovery
-from google.auth import compute_engine
 from google.cloud import compute_v1
-from google.cloud.container_v1 import ClusterManagerClient
+from google.cloud import container_v1
 from oauth2client.client import GoogleCredentials
+import google.auth.transport.requests
 import google.cloud.logging
+import requests
 import config
 
 def configure_gcp():
@@ -65,8 +65,6 @@ def KillInstance(instance_name,instance_zone):
 
 ## Get GKE Creds
 def GetGKECreds():
-    cluster_manager_client = ClusterManagerClient(credentials=config.credentials)
-    request = google.auth.transport.requests.Request()
-    config.credentials.refresh(request)
+    client = container_v1.ClusterManagerClient()
+    return client
 
-    return cluster_manager_client

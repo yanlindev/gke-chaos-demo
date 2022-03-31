@@ -1,6 +1,10 @@
-FROM python:alpine
+FROM debian
 
 LABEL maintainer="rgreaves@google.com"
+
+RUN apt-get update -y
+RUN apt-get install -y python3-pip python3-dev
+
 
 COPY /code /app
 
