@@ -1,3 +1,4 @@
+// Get Instances
 function getInstances(){
     $.ajax({
       url: '/list-instances',
@@ -6,12 +7,13 @@ function getInstances(){
         loadNodeTable(data)
       }
     });
-    setTimeout(getInstances, 5000); // you could choose not to continue on failure...
+    setTimeout(getInstances, 5000);
   }
   
 $(document).ready(function() {
     // run the first time; all subsequent calls will take care of themselves
-    setTimeout(getInstances, 5000);
+    getInstances()
+    getPods()
 });
 
 //Comparer Function    
@@ -46,9 +48,9 @@ function node_click(instance,zone) {
           console.log(data)
         }
       });
-};
+}
 
-// Populate Table
+// Populate Node Table
 function loadNodeTable(data) {
     var Table = document.getElementById("nodes");
     $("#nodes>tbody").empty()
@@ -105,4 +107,94 @@ function loadNodeTable(data) {
     current_row += "</tr>"
     $("#nodes>tbody").append(current_row);
 
+}
+
+// Get Pods
+function getPods(){
+    $.ajax({
+        url: '/list-pods',
+        success: function(data) {
+          console.log(data)
+          loadPodTable(data)
+        }
+      });
+      setTimeout(getPods, 5000);
+}
+
+// Populate Pod Table
+function loadPodTable(data) {
+    $("#pods>tbody").empty()
+
+    // Get the instance data
+    json_data = JSON.parse(data)
+    tableData = json_data.pods
+
+    // Create table
+    current_region = ""
+    current_row = ""
+    current_count = 0
+    for (var i = 0; i < tableData.length; i++) {
+        if (current_count === 3) {
+            current_row += "<td title='"+tableData[i].name+"' onclick=\"pod_click('"+tableData[i].name+"','"+tableData[i].cluster+"','"+tableData[i].zone+"')\"";
+
+            // Validate Color
+            if (tableData[i].status === "Running") {
+                current_row += " class='running'";
+            } else if (tableData[i].status === "Pending") {
+                current_row += " class='starting'";
+            } else {
+                current_row += " class='terminating'";
+                console.log(tableData[i].status);
+            }
+
+            // Wrap up cell
+            current_row +="></td></tr>";
+            $("#pods>tbody").append(current_row);
+            // Reset for next set
+            current_count = 0;
+            current_row = "<tr>";
+        } else {
+            current_row += "<td title='"+tableData[i].name+"' onclick=\"pod_click('"+tableData[i].name+"','"+tableData[i].cluster+"','"+tableData[i].zone+"')\"";
+
+            // Validate Color
+            if (tableData[i].status == "Running") {
+                current_row += " class='running'";
+            } else if (tableData[i].status == "Pending") {
+                current_row += " class='starting'";
+            } else {
+                current_row += " class='terminating'";
+            }
+
+            // Wrap up cell
+            current_row +="></td>";
+            current_count += 1;
+        }
+        
+    }
+    current_row += "</tr>"
+    $("#pods>tbody").append(current_row);
+
+}
+
+// Pod Click
+function pod_click(pod,cluster,zone) {
+    console.log("Terminating Pod: " + pod + ", Cluster: " + cluster +", Zone: " + zone);
+    var fd = new FormData();
+    fd.append('gke_pod', pod);
+    fd.append('gke_zone', zone);
+    fd.append('gke_cluster', cluster)
+
+    // Make Call
+    $.ajax({
+        url: '/remove-pod',
+        data: fd,
+        type: 'POST',
+        processData: false,
+        contentType: false,
+        cache: false,
+        enctype: 'multipart/form-data',
+        success: function(data) {
+          console.log(data)
+        }
+      });
 }

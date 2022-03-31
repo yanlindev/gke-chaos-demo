@@ -9,6 +9,7 @@ import config
 def configure_gcp():
     # Build Credentials
     config.credentials = GoogleCredentials.get_application_default()
+    config.credentials.get_access_token()
     LoggingClient = google.cloud.logging.Client()
 
     # Setup the logger

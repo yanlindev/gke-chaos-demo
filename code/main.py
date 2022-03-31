@@ -59,24 +59,25 @@ def removeinstance():
         return json.dumps({'success':False}), 400, {'ContentType':'application/json'} 
 
 ## Get Servers
-@app.route("/list-services", methods=['GET'])
-def listservices():
+@app.route("/list-pods", methods=['GET'])
+def list_pods():
     # API End Point for get all instances
-    result = k8s.GetServices()
+    result = k8s.GetPods()
 
     # Validate result
     if len(result) > 0:
-        return json.dumps({'success':True, 'services':result}), 201, {'ContentType':'application/json'} 
+        return json.dumps({'success':True, 'pods':result}), 201, {'ContentType':'application/json'} 
     else:
         return json.dumps({'success':False}), 400, {'ContentType':'application/json'} 
 
 ## Delete Pod In Service
-@app.route("/remove-pod-in-service",methods=['POST'])
-def remove_pod_in_service():
-    service = request.form['gke_service']
+@app.route("/remove-pod",methods=['POST'])
+def remove_pod():
+    service = request.form['gke_pod']
     cluster = request.form['gke_cluster']
+    zone = request.form['gke_zone']
 
-    result = k8s.kuberKillPod(service_name=service,cluster_name=cluster)
+    result = k8s.KillPod(pod_name=service,cluster_name=cluster, cluster_zone=zone)
 
     if result:
         return json.dumps({'success':True}), 201, {'ContentType':'application/json'} 
@@ -108,6 +109,4 @@ if __name__ == "__main__":
     gcp.configure_gcp()
     helpers.GetConfig()
     ## Run APP
-    #k8s.GetServices()
-
     app.run(host='0.0.0.0', port=8080, debug=True)
