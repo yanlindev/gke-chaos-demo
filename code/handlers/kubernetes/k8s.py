@@ -14,6 +14,7 @@ def GetPods():
             cluster = cluster_manager_client.get_cluster(name=f'projects/{config.gcp_project}/locations/{aCluster[1]}/clusters/{aCluster[0]}')
 
             # Build Configuration
+            config.credentials.get_access_token()
             configuration = client.Configuration()
             configuration.host = f"https://{cluster.endpoint}:443"
             configuration.verify_ssl = False
