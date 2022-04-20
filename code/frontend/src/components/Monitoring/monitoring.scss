@@ -1,3 +1,23 @@
 .monitoring {
-  border: 1px black solid;
+  padding: 0 0 50px 0;
+  text-align: left;
+
+  &__inner {
+    align-items: center;
+    background: white;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding: 25px;
+
+    .text {
+      color: #838383;
+    }
+  }
+
+  .title {
+    font-size: 26px;
+    font-weight: 500;
+  }
 }
