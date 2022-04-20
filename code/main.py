@@ -12,10 +12,10 @@ app = Flask(__name__)
 
 
 ## Default App Hosting
-@app.route("/", methods=['GET'])
+@app.route("/")
 def default():
     ## Load Page
-    return render_template('index.html', monitor_page=config.dashboard_url)
+    return render_template('index.html')
 
 ## Chaos Page
 @app.route("/chaos", methods=['GET'])
