@@ -15,7 +15,7 @@ app = Flask(__name__)
 @app.route("/")
 def default():
     ## Load Page
-    return render_template('index.html')
+    return 'hello'
 
 ## Chaos Page
 @app.route("/chaos", methods=['GET'])
@@ -59,7 +59,7 @@ def removeinstance():
         return json.dumps({'success':False}), 400, {'ContentType':'application/json'} 
 
 ## Get Servers
-@app.route("/list-pods", methods=['GET'])
+@app.route("/list-pods")
 def list_pods():
     # API End Point for get all instances
     result = k8s.GetPods()

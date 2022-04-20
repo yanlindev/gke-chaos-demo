@@ -1,0 +1,19 @@
+.App {
+  height: 100vh;
+  text-align: center;
+
+  .main {
+    display: flex;
+    height: 100%;
+    width: 100%;
+
+    &-left {
+      width: 50%;
+    }
+
+    &-right {
+      height: 100%;
+      width: 50%;
+    }
+  }
+}
