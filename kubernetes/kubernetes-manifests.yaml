@@ -700,6 +700,7 @@ spec:
     metadata:
       labels:
         app: adservice
+        chaos: notfound
     spec:
       serviceAccountName: default
       terminationGracePeriodSeconds: 5

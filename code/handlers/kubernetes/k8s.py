@@ -2,38 +2,72 @@ from kubernetes import client
 from handlers.gcp import gcp
 import config as config
 
-## Get GKE Services
-def GetPods():
+## Get Kubernetes creds
+def GetKubernetesCreds(location: str, name: str):
+    # Returns Configuration set for Kubernetes Cluster
+    configuration = ""
     cluster_manager_client = gcp.GetGKECreds()
-    results = []
+    try:
+        print(f"Getting Credentials for the cluster: {name}, located at: {location}")
+        cluster = cluster_manager_client.get_cluster(name=f'projects/{config.gcp_project}/locations/{location}/clusters/{name}')
+        # Build Configuration
+        config.credentials.get_access_token()
+        configuration = client.Configuration()
+        configuration.host = f"https://{cluster.endpoint}:443"
+        configuration.verify_ssl = False
+        configuration.api_key = {"authorization": "Bearer " + config.credentials.access_token}
+    except Exception as e:
+        print (e)
+
+    return configuration
+
+## Get GKE Services
+def GetServices(cluster_name: str, cluster_location: str):
+    # Get list of services in namespace
+    ## Itterate over clusters
+    service_list = []
+    client.Configuration.set_default(GetKubernetesCreds(location=cluster_location,name=cluster_name))
+
+    # Get service list
+    v1 = client.CoreV1Api()
+    try:
+        services = v1.list_service_for_all_namespaces(watch=False)
+        for aService in services.items:
+            if aService.metadata.namespace == 'hipster':
+                print(aService)
+                service_list.append(aService.metadata.name)
+    except Exception as e:
+        print(e)
+
+    return service_list
+
+
+def GetPods():
+    # Gather a list of pods in each service in each cluster
+    pod_results = []
 
     ## Itterate over clusters
     for aCluster in config.gke_clusters:
         try:
             print(f"Getting Pods in: {aCluster[0]}, {aCluster[1]}")
-            cluster = cluster_manager_client.get_cluster(name=f'projects/{config.gcp_project}/locations/{aCluster[1]}/clusters/{aCluster[0]}')
+            client.Configuration.set_default(GetKubernetesCreds(location=aCluster[1],name=aCluster[0]))
 
-            # Build Configuration
-            config.credentials.get_access_token()
-            configuration = client.Configuration()
-            configuration.host = f"https://{cluster.endpoint}:443"
-            configuration.verify_ssl = False
-            configuration.api_key = {"authorization": "Bearer " + config.credentials.access_token}
-            client.Configuration.set_default(configuration)
-
-            # Get Pods
+            # Get Pod in each service
             v1 = client.CoreV1Api()
-            label_selector = "chaos != notfound"
-            pods = v1.list_namespaced_pod("hipster",label_selector=label_selector)
-            # Itterate Over Found Pods
-            for i in pods.items:
-                # Add Pod to Results
-                results.append({'name':i.metadata.name,'cluster':aCluster[0],'zone':aCluster[1],'status':i.status.phase})
+            service_list = GetServices(cluster_name=aCluster[0], cluster_location=aCluster[1])
+            for aService in service_list:
+                # Filter by service
+                label_selector = f"app = {aService}"
+                pods = v1.list_namespaced_pod("hipster",label_selector=label_selector)
+                # Itterate Over Found Pods
+                for i in pods.items:
+                    # Add Pod to Results
+                    pod_results.append({'name':i.metadata.name,'cluster':aCluster[0],'zone':aCluster[1],'status':i.status.phase})
         except Exception as e:
             print (e)
 
     # Return results
-    return results
+    return pod_results
             
 ## Kill Pod
 def KillPod(pod_name, cluster_name, cluster_zone):
