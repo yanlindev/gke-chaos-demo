@@ -13,4 +13,20 @@
   &:hover {
     background: #366efc;
   }
+
+  &--short {
+    padding: 12px 18px;
+  }
+
+  &--green {
+    background: #03BC63;
+  }
+
+  &--red {
+    background: #FB4438;
+
+    &:hover {
+      background: #fe584c;
+    }
+  }
 }

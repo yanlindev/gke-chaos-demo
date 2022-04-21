@@ -11,7 +11,7 @@ const Button = props => {
     </a>
     :
     <button
-      className='button'
+      className={`button ${props.short ? 'button--short' : null} ${props.green ? 'button--green' : null} ${props.red ? 'button--red' : null}`}
       onClick={props.handleClick}
     >
       {props.text}  

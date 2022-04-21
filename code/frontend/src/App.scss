@@ -14,14 +14,16 @@
     width: 100%;
 
     &-left {
+      overflow: scroll;
       padding: 40px 0 40px 40px;
-      width: 50%;
+      width: 60%;
     }
 
     &-right {
       height: calc(100vh - 100px);
+      overflow: hidden;
       padding: 40px 0 40px 40px;
-      width: 50%;
+      width: 40%;
     }
   }
 }
