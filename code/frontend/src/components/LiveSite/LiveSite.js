@@ -5,7 +5,7 @@ import loadingGif from '../../assets/loading.gif';
 
 const LiveSite = () => {
   const [isIframeLoaded, setIsIframeLoaded] = useState(false);
-  const [iframeURL, setIframeURL] = useState();
+  const [iframeURL, setIframeURL] = useState('');
   let i = 0;
 
   useEffect(() => {
@@ -14,10 +14,15 @@ const LiveSite = () => {
     }, 2000);
   }, []);
 
+  useEffect(() => {
+    console.log(iframeURL)
+  }, [iframeURL]);
+
   const rotateIframeURL = () => {
-    setIframeURL(_VARIABLES.SITE_URLS[i]);
-    i = i > _VARIABLES.SITE_URLS.length - 1 ? 0 : i ++;
-    // console.log('ooo')
+    setIframeURL(_VARIABLES.site_urls[i]);
+    i = i > _VARIABLES.site_urls.length - 2 ? 0 : i + 1;
+    console.log(i)
+    // i = i > _VARIABLES.site_urls.length - 1 ? 0 : i ++;
   }
 
   const handleIframeOnLoad = () => {

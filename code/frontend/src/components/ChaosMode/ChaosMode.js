@@ -14,11 +14,11 @@ const ChaosMode = () => {
   const getSortOrder = prop => {    
     return function(a, b) {    
         if (a[prop] > b[prop]) {    
-            return 1;    
+          return 1;    
         } else if (a[prop] < b[prop]) {    
-            return -1;    
+          return -1;    
         }    
-        return 0;    
+      return 0;    
     }    
   }
 
@@ -27,8 +27,8 @@ const ChaosMode = () => {
     axios.get('/list-pods')
     .then(function (response) {
       // handle success
-      setServicesData(response.data.pods);
-      // console.log(response.data.pods);
+      // setServicesData(response.data.pods);
+      console.log(response.data.pods);
     })
 
     axios.get('/list-instances')
@@ -63,7 +63,6 @@ const ChaosMode = () => {
 
   // Toggle Node life
   const handleNodeToggle = nodeData => {
-    console.log('kkkkkkkkkk')
     const {name, zone} = nodeData;
     let fd = new FormData();
     fd.append('instance_name', name);
