@@ -20,6 +20,10 @@
 
   &--green {
     background: #03BC63;
+
+    &:hover {
+      background: #10da78;
+    }
   }
 
   &--red {
@@ -27,6 +31,15 @@
 
     &:hover {
       background: #fe584c;
+    }
+  }
+
+  &--pending {
+    background: #B5B5B5;
+    pointer-events: none;
+
+    &:hover {
+      background: #B5B5B5;
     }
   }
 }

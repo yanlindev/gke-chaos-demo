@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './button.scss';
 
 const Button = props => {
@@ -11,7 +11,7 @@ const Button = props => {
     </a>
     :
     <button
-      className={`button ${props.short ? 'button--short' : null} ${props.green ? 'button--green' : null} ${props.red ? 'button--red' : null}`}
+      className={`button ${props.short ? 'button--short' : null} ${props.isPending ? 'button--pending' : null} ${props.type === 'red' ? 'button--red' : null} ${props.type === 'green' ? 'button--green' : null}`}
       onClick={props.handleClick}
     >
       {props.text}  
