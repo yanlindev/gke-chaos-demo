@@ -11,7 +11,7 @@ const Button = props => {
     </a>
     :
     <button
-      className={`button ${props.short ? 'button--short' : null} ${props.isPending ? 'button--pending' : null} ${props.type === 'red' ? 'button--red' : null} ${props.type === 'green' ? 'button--green' : null}`}
+      className={`button ${props.short ? 'button--short' : null} ${props.isPending ? 'button--pending' : null} ${props.type === 'red' ? 'button--red' : null} ${props.type === 'green' ? 'button--green' : null} ${props.type === 'disabled' ? 'button--disabled' : null}`}
       onClick={props.handleClick}
     >
       {props.text}  

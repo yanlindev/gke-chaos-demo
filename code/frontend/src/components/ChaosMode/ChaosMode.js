@@ -24,20 +24,34 @@ const ChaosMode = () => {
 
   // fetch services and nodes data at load
   useEffect(() => {
+    getAllData();
+  }, [servicesData, nodesData])
+
+  // Get all services and nodes data
+  const getAllData = () => {
+    getPods();
+    getInstances();
+  }
+
+  // Get Services
+  const getPods = () => {
     axios.get('/list-pods')
     .then(function (response) {
       // handle success
       // setServicesData(response.data.pods);
       console.log(response.data.pods);
     })
+  }
 
+  // Get Instances
+  const getInstances = () => {
     axios.get('/list-instances')
     .then(function (response) {
       // handle success
       setNodesData(response.data.instances.sort(getSortOrder("zone")));
-      console.log(response.data.instances.filter(x => x.status == 'RUNNING'));
+      console.log(response.data.instances);
     })
-  }, [servicesData, nodesData])
+  }
 
   // Toggle Service life
   const handleServiceToggle = podData => {
@@ -49,27 +63,6 @@ const ChaosMode = () => {
 
     $.ajax({
       url: '/remove-pod',
-      data: fd,
-      type: 'POST',
-      processData: false,
-      contentType: false,
-      cache: false,
-      enctype: 'multipart/form-data',
-      success: data => {
-        console.log(data)
-      }
-    })
-  }
-
-  // Toggle Node life
-  const handleNodeToggle = nodeData => {
-    const {name, zone} = nodeData;
-    let fd = new FormData();
-    fd.append('instance_name', name);
-    fd.append('instance_zone', zone);
-
-    $.ajax({
-      url: '/remove-instance',
       data: fd,
       type: 'POST',
       processData: false,
@@ -107,7 +100,7 @@ const ChaosMode = () => {
             {/* Render all Node rows here */}
             {
               nodesData.length ? nodesData.map(node => (
-                <NodeRow node={node} handleClick={handleNodeToggle}/>
+                <NodeRow node={node} />
               )) : <SkeletonPlaceHolder count={20} />
             }
           </div>
@@ -118,32 +111,63 @@ const ChaosMode = () => {
 }
 
 ///////////////////////////////////////////////////////////
-const ServiceRow = ({service, handleClick}) => service ? (
-  <div className={`service ${service.status === 'Running' ? 'service--running' : 'service--down'}`} key={service.name}>
-    <div className='service__name'>{service.name.replace(/\-.*/,'').charAt(0).toUpperCase() + service.name.replace(/\-.*/,'').slice(1)}</div>
-    <div className='service__status'>Status: <span className='dot'></span></div>
-    <Button
-      text='Terminate'
-      short='true'
-      type={service.status === 'Running' ? 'red' : 'green'}
-      handleClick={() => handleClick(service)}
-    />
-  </div>
-) : <Skeleton count={3} />
+const ServiceRow = ({service, handleClick}) => {
+  return (
+    service ? (
+      <div className={`service ${service.status === 'Running' ? 'service--running' : 'service--down'}`} key={service.name}>
+        <div className='service__name'>{service.name.replace(/\-.*/,'').charAt(0).toUpperCase() + service.name.replace(/\-.*/,'').slice(1)}</div>
+        <div className='service__status'>Status: <span className='dot'></span></div>
+        <Button
+          text='Terminate'
+          short='true'
+          type={service.status === 'Running' ? 'red' : 'green'}
+          handleClick={() => handleClick(service)}
+        />
+      </div>
+    ) : <Skeleton count={3} />
+  )
+}
 
-const NodeRow = ({node, handleClick}) => (
-  <div className='node' key={node.name}>
-    <div className='node__name'>{node.zone}</div>
-    <div className='node__status'>Status: <span className='dot'></span></div>
-    <Button
-      text='Terminate'
-      short='true'
-      type={node.status === 'RUNNING' ? 'red' : 'green'}
-      handleClick={() => handleClick(node)}
-      hasPendingState='true'
-    />
-  </div>
-)
+const NodeRow = ({node, handleClick}) => {
+  const [isPending, setIsPending] = useState(false);
+
+  // Toggle Node life
+  const handleNodeToggle = nodeData => {
+    setIsPending(true);
+    const {name, zone} = nodeData;
+    let fd = new FormData();
+    fd.append('instance_name', name);
+    fd.append('instance_zone', zone);
+
+    $.ajax({
+      url: '/remove-instance',
+      data: fd,
+      type: 'POST',
+      processData: false,
+      contentType: false,
+      cache: false,
+      enctype: 'multipart/form-data',
+      success: data => {
+        console.log('ppp')
+        setIsPending(false);
+      }
+    })
+  }
+
+  return (
+    <div className='node' key={node.name}>
+      <div className='node__name'>{node.zone}</div>
+      <div className='node__status'>Status: <span className='dot'></span></div>
+      <Button
+        text={isPending ? 'Terminating...' : node.status === 'RUNNING' ? 'Terminate' : 'Terminated'}
+        short='true'
+        type={node.status === 'RUNNING' ? 'red' : 'disabled'}
+        handleClick={() => handleNodeToggle(node)}
+        isPending={isPending}
+      />
+    </div>
+  )
+}
 
 const SkeletonPlaceHolder = ({count}) => <Skeleton className='skeleton' count={count} />
 
