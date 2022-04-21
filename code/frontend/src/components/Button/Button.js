@@ -12,6 +12,7 @@ const Button = props => {
     :
     <button
       className='button'
+      onClick={props.handleClick}
     >
       {props.text}  
     </button>

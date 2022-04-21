@@ -5,6 +5,7 @@
   color: #434343;
   font-family: 'Roboto', sans-serif;
   height: 100vh;
+  overflow: hidden;
   text-align: center;
 
   .main {
@@ -18,7 +19,8 @@
     }
 
     &-right {
-      height: 100%;
+      height: calc(100vh - 100px);
+      padding: 40px 0 40px 40px;
       width: 50%;
     }
   }

@@ -1,3 +1,18 @@
 .load-generator {
-  border: 1px black solid;
+  text-align: left;
+
+  &__title {
+    font-size: 26px;
+    font-weight: 500;
+  }
+
+  &__inner {
+    background: white;
+    border-radius: 8px;
+    margin-top: 20px;
+
+    .button {
+      margin: 30px 0 0 30px;
+    }
+  }
 }

@@ -16,7 +16,7 @@ function App() {
           <LoadGenerator />
           <ChaosMode />
         </div>
-        <div className='main-left'>
+        <div className='main-right'>
           <LiveSite />
         </div>
       </div>
