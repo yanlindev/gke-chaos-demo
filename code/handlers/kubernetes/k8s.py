@@ -22,19 +22,19 @@ def GetKubernetesCreds(location: str, name: str):
     return configuration
 
 ## Get GKE Services
-def GetServices(cluster_name: str, cluster_location: str):
+def GetServices(namespace_filter:str, credentials):
     # Get list of services in namespace
     ## Itterate over clusters
     service_list = []
-    client.Configuration.set_default(GetKubernetesCreds(location=cluster_location,name=cluster_name))
+    client.Configuration.set_default(credentials)
 
     # Get service list
     v1 = client.CoreV1Api()
     try:
         services = v1.list_service_for_all_namespaces(watch=False)
         for aService in services.items:
-            if aService.metadata.namespace == 'hipster':
-                print(aService)
+            if aService.metadata.namespace == namespace_filter:
+                print(aService.metadata.name)
                 service_list.append(aService.metadata.name)
     except Exception as e:
         print(e)
@@ -42,29 +42,45 @@ def GetServices(cluster_name: str, cluster_location: str):
     return service_list
 
 
-def GetPods():
+def GetPods(service: str, cluster_name: str, cluster_location: str,  namespace_filter: str, credentials):
     # Gather a list of pods in each service in each cluster
     pod_results = []
+    client.Configuration.set_default(credentials)
+    v1 = client.CoreV1Api()
+    try: 
+        print(f"Getting Pods in the follwing service list {service}, from the {cluster_name} in the {namespace_filter} namespace")
+        # Filter by service
+        label_selector = f"app = {service}"
+        pods = v1.list_namespaced_pod(namespace_filter,label_selector=label_selector)
+        for i in pods.items:
+            # Add Pod to Results
+            pod_results.append({'name':i.metadata.name,'cluster':cluster_name,'zone':cluster_location,'status':i.status.phase})
+    
+    except Exception as e:
+        print (e)
 
+    # Return results
+    return pod_results
+
+def CreatePodList(namespace: str = "hipster" ):
+    # Function to get a list of all pods in all services inside a namespace
+    pod_results = []
     ## Itterate over clusters
     for aCluster in config.gke_clusters:
-        try:
-            print(f"Getting Pods in: {aCluster[0]}, {aCluster[1]}")
-            client.Configuration.set_default(GetKubernetesCreds(location=aCluster[1],name=aCluster[0]))
+        cluster_name = aCluster[0]
+        cluster_location = aCluster[1]
+        print(f"Cluster: {cluster_name}, located: {cluster_location}")
 
-            # Get Pod in each service
-            v1 = client.CoreV1Api()
-            service_list = GetServices(cluster_name=aCluster[0], cluster_location=aCluster[1])
-            for aService in service_list:
-                # Filter by service
-                label_selector = f"app = {aService}"
-                pods = v1.list_namespaced_pod("hipster",label_selector=label_selector)
-                # Itterate Over Found Pods
-                for i in pods.items:
-                    # Add Pod to Results
-                    pod_results.append({'name':i.metadata.name,'cluster':aCluster[0],'zone':aCluster[1],'status':i.status.phase})
-        except Exception as e:
-            print (e)
+        this_client = GetKubernetesCreds(location=cluster_location,name=cluster_name)
+
+        # Get Service List
+        service_list = GetServices(namespace_filter=namespace, credentials=this_client)
+
+        # Get pods in service
+        for aService in service_list:
+            found_pods = GetPods(cluster_name=cluster_name, cluster_location=cluster_location, service=aService, namespace_filter=namespace, credentials=this_client)
+            if found_pods != []:
+                pod_results.append(found_pods)
 
     # Return results
     return pod_results
