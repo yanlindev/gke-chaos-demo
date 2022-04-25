@@ -11,12 +11,26 @@
     <script>
         var frames = JSON.parse('{{ preview_list|tojson|safe }}')
         console.log(frames)
+        var load_timeout = 0;
         var i = 0, len = frames.length;
         function ChangeSrc()
         {
             if (i >= len) { i = 0; } // start over
             $('#preview_iframe').attr('src', frames[i++]);
-            setTimeout('ChangeSrc()', 20000);
+            setTimeout('ChangeSrc()', 10000);
+        }
+        function GetLoad(){
+        $.ajax({
+            url: '/get-load',
+            success: function(data) {
+            console.log(data)
+            // Add Data to graph
+            json_data = JSON.parse(data)
+            load_timeout(data)
+            }
+        });
+
+        setTimeout(GetLoad, 10000);
         }
     </script>
     <iframe src="" title="Site Preview" scrolling="no" id="preview_iframe"></iframe>

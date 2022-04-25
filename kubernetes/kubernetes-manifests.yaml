@@ -217,6 +217,7 @@ spec:
       annotations:
         sidecar.istio.io/rewriteAppHTTPProbers: "true"
     spec:
+      replicas: 3
       serviceAccountName: default
       containers:
         - name: server

@@ -65,6 +65,7 @@ def KillInstance(instance_name,instance_zone):
 
 ## Get GKE Creds
 def GetGKECreds():
+    config.credentials.get_access_token()
     client = container_v1.ClusterManagerClient()
     return client
 
