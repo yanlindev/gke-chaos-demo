@@ -117,7 +117,7 @@ function getPods(){
           loadPodTable(data)
         }
       });
-      setTimeout(getPods, 5000);
+      setTimeout(getPods, 10000);
 }
 
 // Populate Pod Table
