@@ -6,7 +6,7 @@ import axios from 'axios';
 
 const today = new Date();
 
-const LiveSite = () => {
+const LoadGenerator = () => {
   // Variables
   const [currentLoad, setCurrentLoad] = useState(100);
   const [chartData, setChartData] = useState([100]);
@@ -24,6 +24,7 @@ const LiveSite = () => {
     axios.get('/increase-load')
     .then(response => {
       // Handle success
+      console.log('kk')
       handleGetLoad();
     })
   }
@@ -46,7 +47,11 @@ const LiveSite = () => {
       <div className='load-generator__title'>Load Generator</div>
       <div className='load-generator__inner'>
         <div className='load-generator__load-info'>
-          <Button className='button' text='Generate Load' handleClick={handleGenerateLoad}/>
+          <Button
+            className='button'
+            text='Generate Load'
+            handleClick={handleGenerateLoad}
+          />
           <div className='info'><span>Current Load:</span><span className='load'>{currentLoad}</span></div>
         </div>
         <Chart
@@ -58,4 +63,4 @@ const LiveSite = () => {
   )
 }
 
-export default LiveSite;
+export default LoadGenerator;
