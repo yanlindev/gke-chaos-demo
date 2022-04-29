@@ -26,7 +26,7 @@ Then front end will be served [locally](http://localhost:3000)(port 3000) and ab
 ## Before Deployment
 ### Build Frontend
 ```
-cd 'code/frontend'
+cd code/frontend
 npm install
 npm run build
 ```
