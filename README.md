@@ -23,7 +23,7 @@ npm run start
 ```
 Then front end will be served [locally](http://localhost:3000)(port 3000) and able to talk to backend(port 8080) over proxy.<br /><br />
 
-## preparation for Deployment
+## Before Deployment
 ### Build Frontend
 ```
 cd 'code/frontend'
