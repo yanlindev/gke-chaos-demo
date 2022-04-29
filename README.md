@@ -23,14 +23,14 @@ npm run start
 ```
 Then front end will be served [locally](http://localhost:3000)(port 3000) and able to talk to backend(port 8080) over proxy.<br /><br />
 
-## Prepration for Deployment
+## preparation for Deployment
 ### Build Frontend
 ```
 cd 'code/frontend'
 npm install
 npm run build
 ```
-A /build folder will be built in 'frontend' and served by Flask.<br /><br />
+A /build folder will be built in 'frontend' and served by Flask as static folder.<br /><br />
 
 ## Config
 Config is either via local file [config.json](code/config.json) or recreating with environmental variables:<br />
