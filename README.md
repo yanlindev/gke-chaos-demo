@@ -17,7 +17,7 @@ deactivate
 ```
 ### Run Frontend Locally ([node](https://nodejs.org/en/) needs to be installed)
 ```
-cd 'code/frontend'
+cd code/frontend
 npm install
 npm run start
 ```
