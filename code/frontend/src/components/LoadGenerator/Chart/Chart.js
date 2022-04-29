@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './chart.scss';
-// import { _VARIABLES } from '../../config.js';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -31,10 +30,6 @@ const options = {
       align: 'end',
       padding: 20
     },
-    // title: {
-    //   display: true,
-    //   text: 'Load Chart',
-    // },
   },
 };
 
@@ -44,7 +39,7 @@ const Chart = props => {
     labels,
     datasets: [
       {
-        label: 'Current Load',
+        label: 'Load',
         data: chartData,
         borderColor: 'rgb(255, 99, 132)',
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
@@ -59,7 +54,7 @@ const Chart = props => {
       labels,
       datasets: [
         {
-          label: 'Current Load',
+          label: 'Load',
           data: chartData,
           borderColor: 'rgb(255, 99, 132)',
           backgroundColor: 'rgba(255, 99, 132, 0.5)',

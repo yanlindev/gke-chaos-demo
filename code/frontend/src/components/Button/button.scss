@@ -44,11 +44,8 @@
   }
 
   &--disabled {
-    background: #B5B5B5;
+    background: none;
+    color: #434343;
     pointer-events: none;
-
-    &:hover {
-      background: #B5B5B5;
-    }
   }
 }

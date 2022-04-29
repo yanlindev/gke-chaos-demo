@@ -21,8 +21,6 @@ const LiveSite = () => {
   const rotateIframeURL = () => {
     setIframeURL(_VARIABLES.site_urls[i]);
     i = i > _VARIABLES.site_urls.length - 2 ? 0 : i + 1;
-    console.log(i)
-    // i = i > _VARIABLES.site_urls.length - 1 ? 0 : i ++;
   }
 
   const handleIframeOnLoad = () => {

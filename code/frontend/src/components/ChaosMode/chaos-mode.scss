@@ -18,6 +18,8 @@
     border-radius: 8px;
     display: flex;
     margin-top: 20px;
+    overflow: hidden;
+    position: relative;
 
     .services {
       border-right: 1px dotted rgb(165, 165, 165);
@@ -78,6 +80,10 @@
           &--is-terminated {
             background: #FB4438;
           }
+        }
+
+        &--disabled {
+          opacity: .5;
         }
       }
     }

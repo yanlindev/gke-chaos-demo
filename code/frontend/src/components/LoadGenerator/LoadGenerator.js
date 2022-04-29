@@ -8,7 +8,7 @@ const today = new Date();
 
 const LiveSite = () => {
   // Variables
-  const MAX_DATA_ITEMS = 4;
+  const [currentLoad, setCurrentLoad] = useState(100);
   const [chartData, setChartData] = useState([100]);
   const [chartTime, setChartTime] = useState([today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()]);
 
@@ -34,6 +34,7 @@ const LiveSite = () => {
     .then(response => {
       // handle success
       // Update load data
+      setCurrentLoad(response.data.current_load);
       setChartData(chartData => [...chartData, response.data.current_load]);
       // Update time
       setChartTime(chartTime => [...chartTime, today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()]);
@@ -44,7 +45,10 @@ const LiveSite = () => {
     <div className='load-generator'>
       <div className='load-generator__title'>Load Generator</div>
       <div className='load-generator__inner'>
-        <Button className='button' text='Generate Load' handleClick={handleGenerateLoad}/>
+        <div className='load-generator__load-info'>
+          <Button className='button' text='Generate Load' handleClick={handleGenerateLoad}/>
+          <div className='info'><span>Current Load:</span><span className='load'>{currentLoad}</span></div>
+        </div>
         <Chart
           chartData={chartData}
           labels={chartTime}

@@ -3,8 +3,9 @@ import axios from 'axios';
 import $ from "jquery";
 import './chaos-mode.scss';
 import Button from '../Button/Button';
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
+import Skeleton from 'react-loading-skeleton';
+import ProgressBar from '../ProgressBar/ProgressBar';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 const ChaosMode = () => {
   const [servicesData, setServicesData] = useState([]);
@@ -29,7 +30,6 @@ const ChaosMode = () => {
 
   // Get all services and nodes data
   const getAllData = () => {
-    console.log('get all data')
     getPods();
     getInstances();
   }
@@ -39,8 +39,7 @@ const ChaosMode = () => {
     axios.get('/list-pods')
     .then(function (response) {
       // handle success
-      // setServicesData(response.data.pods);
-      // console.log(response.data.pods);
+      setServicesData(response.data.pods);
     })
   }
 
@@ -50,29 +49,6 @@ const ChaosMode = () => {
     .then(function (response) {
       // handle success
       setNodesData(response.data.instances.sort(getSortOrder("zone")));
-      // console.log(response.data.instances);
-    })
-  }
-
-  // Toggle Service life
-  const handleServiceToggle = podData => {
-    const {name, cluster, zone} = podData;
-    let fd = new FormData();
-    fd.append('gke_pod', name);
-    fd.append('gke_zone', zone);
-    fd.append('gke_cluster', cluster);
-
-    $.ajax({
-      url: '/remove-pod',
-      data: fd,
-      type: 'POST',
-      processData: false,
-      contentType: false,
-      cache: false,
-      enctype: 'multipart/form-data',
-      success: data => {
-        // console.log(data)
-      }
     })
   }
 
@@ -88,7 +64,7 @@ const ChaosMode = () => {
             {
               servicesData.length ?
                 servicesData.map(service => (
-                  <ServiceRow service={service} handleClick={handleServiceToggle} rerender={getAllData} />
+                  <ServiceRow service={service} />
               )) : <SkeletonPlaceHolder count={20} />
             }
           </div>
@@ -112,7 +88,34 @@ const ChaosMode = () => {
 }
 
 ///////////////////////////////////////////////////////////
-const ServiceRow = ({service, handleClick, rerender}) => {
+const ServiceRow = ({service}) => {
+  const [isPending, setIsPending] = useState(false);
+
+  // Kill Service life
+  const handleServiceLife = serviceData => {
+    setIsPending(true);
+
+    const {name, zone, cluster} = serviceData;
+    let fd = new FormData();
+    fd.append('gke_pod', name);
+    fd.append('gke_zone', zone);
+    fd.append('gke_cluster', cluster)
+
+    $.ajax({
+      url: '/remove-pod',
+      data: fd,
+      type: 'POST',
+      dataType: "json",
+      processData: false,
+      contentType: false,
+      cache: false,
+      enctype: 'multipart/form-data',
+      success: function(data) {
+        // console.log(data);
+      }
+    })
+  }
+
   return (
     service ? (
       <div className={`service ${service.status === 'Running' ? 'service--running' : 'service--down'}`} key={service.name}>
@@ -122,19 +125,25 @@ const ServiceRow = ({service, handleClick, rerender}) => {
           text='Terminate'
           short='true'
           type={service.status === 'Running' ? 'red' : 'green'}
-          handleClick={() => handleClick(service)}
+          handleClick={() => handleServiceLife(service)}
+          isPending={isPending}
         />
       </div>
     ) : <Skeleton count={3} />
   )
 }
 
-const NodeRow = ({node, handleClick, rerender}) => {
+const NodeRow = ({node}) => {
   const [isPending, setIsPending] = useState(false);
 
-  // Toggle Node life
-  const handleNodeToggle = nodeData => {
+  useEffect(() => {
+    setIsPending(false);
+  }, [])
+
+  // Kill Node life
+  const handleNodeLife = nodeData => {
     setIsPending(true);
+
     const {name, zone} = nodeData;
     let fd = new FormData();
     fd.append('instance_name', name);
@@ -144,27 +153,27 @@ const NodeRow = ({node, handleClick, rerender}) => {
       url: '/remove-instance',
       data: fd,
       type: 'POST',
+      dataType: "json",
       processData: false,
       contentType: false,
       cache: false,
       enctype: 'multipart/form-data',
-      success: data => {
-        // console.log('ppp')
+      success: function(data) {
+        // console.log(data);
         setIsPending(false);
-        rerender();
       }
     })
   }
 
   return (
-    <div className='node' key={node.name}>
+    <div className={`node ${node.status === 'RUNNING' ? '' : 'node--disabled'}`} key={node.name}>
       <div className='node__name'>{node.zone}</div>
       <div className='node__status'>Status: <span className={`dot ${node.status === 'RUNNING' ? '' : 'dot--is-terminated'}`}></span></div>
       <Button
         text={node.status === 'RUNNING' ? 'Terminate' : 'Terminated'}
         short='true'
         type={node.status === 'RUNNING' ? 'red' : 'disabled'}
-        handleClick={() => handleNodeToggle(node)}
+        handleClick={() => handleNodeLife(node)}
         isPending={isPending}
       />
     </div>
