@@ -217,6 +217,7 @@ spec:
       annotations:
         sidecar.istio.io/rewriteAppHTTPProbers: "true"
     spec:
+      replicas: 3
       serviceAccountName: default
       containers:
         - name: server
@@ -700,6 +701,7 @@ spec:
     metadata:
       labels:
         app: adservice
+        chaos: notfound
     spec:
       serviceAccountName: default
       terminationGracePeriodSeconds: 5

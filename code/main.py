@@ -62,7 +62,7 @@ def removeinstance():
 @app.route("/list-pods")
 def list_pods():
     # API End Point for get all instances
-    result = k8s.GetPods()
+    result = k8s.CreatePodList()
 
     # Validate result
     if len(result) > 0:

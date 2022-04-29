@@ -1,0 +1,59 @@
+kind: ServiceExport
+apiVersion: net.gke.io/v1
+metadata:
+ namespace: hipster
+ name: cartservice
+---
+kind: ServiceExport
+apiVersion: net.gke.io/v1
+metadata:
+ namespace: hipster
+ name: adservice
+---
+kind: ServiceExport
+apiVersion: net.gke.io/v1
+metadata:
+ namespace: hipster
+ name: checkoutservice
+---
+kind: ServiceExport
+apiVersion: net.gke.io/v1
+metadata:
+ namespace: hipster
+ name: currencyservice
+---
+kind: ServiceExport
+apiVersion: net.gke.io/v1
+metadata:
+ namespace: hipster
+ name: emailservice
+---
+kind: ServiceExport
+apiVersion: net.gke.io/v1
+metadata:
+ namespace: hipster
+ name: paymentservice
+---
+kind: ServiceExport
+apiVersion: net.gke.io/v1
+metadata:
+ namespace: hipster
+ name: productcatalogservice
+---
+kind: ServiceExport
+apiVersion: net.gke.io/v1
+metadata:
+ namespace: hipster
+ name: recommendationservice
+---
+kind: ServiceExport
+apiVersion: net.gke.io/v1
+metadata:
+ namespace: hipster
+ name: redis-cart
+---
+kind: ServiceExport
+apiVersion: net.gke.io/v1
+metadata:
+ namespace: hipster
+ name: shippingservice
