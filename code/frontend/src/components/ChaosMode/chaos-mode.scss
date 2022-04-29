@@ -74,10 +74,10 @@
           height: 12px;
           margin-left: 4px;
           width: 12px;
-        }
 
-        &--down {
-
+          &--is-terminated {
+            background: #FB4438;
+          }
         }
       }
     }

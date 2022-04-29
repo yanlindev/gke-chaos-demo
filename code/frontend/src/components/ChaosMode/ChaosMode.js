@@ -29,6 +29,7 @@ const ChaosMode = () => {
 
   // Get all services and nodes data
   const getAllData = () => {
+    console.log('get all data')
     getPods();
     getInstances();
   }
@@ -39,7 +40,7 @@ const ChaosMode = () => {
     .then(function (response) {
       // handle success
       // setServicesData(response.data.pods);
-      console.log(response.data.pods);
+      // console.log(response.data.pods);
     })
   }
 
@@ -49,7 +50,7 @@ const ChaosMode = () => {
     .then(function (response) {
       // handle success
       setNodesData(response.data.instances.sort(getSortOrder("zone")));
-      console.log(response.data.instances);
+      // console.log(response.data.instances);
     })
   }
 
@@ -70,7 +71,7 @@ const ChaosMode = () => {
       cache: false,
       enctype: 'multipart/form-data',
       success: data => {
-        console.log(data)
+        // console.log(data)
       }
     })
   }
@@ -87,7 +88,7 @@ const ChaosMode = () => {
             {
               servicesData.length ?
                 servicesData.map(service => (
-                  <ServiceRow service={service} handleClick={handleServiceToggle}/>
+                  <ServiceRow service={service} handleClick={handleServiceToggle} rerender={getAllData} />
               )) : <SkeletonPlaceHolder count={20} />
             }
           </div>
@@ -111,7 +112,7 @@ const ChaosMode = () => {
 }
 
 ///////////////////////////////////////////////////////////
-const ServiceRow = ({service, handleClick}) => {
+const ServiceRow = ({service, handleClick, rerender}) => {
   return (
     service ? (
       <div className={`service ${service.status === 'Running' ? 'service--running' : 'service--down'}`} key={service.name}>
@@ -128,7 +129,7 @@ const ServiceRow = ({service, handleClick}) => {
   )
 }
 
-const NodeRow = ({node, handleClick}) => {
+const NodeRow = ({node, handleClick, rerender}) => {
   const [isPending, setIsPending] = useState(false);
 
   // Toggle Node life
@@ -148,8 +149,9 @@ const NodeRow = ({node, handleClick}) => {
       cache: false,
       enctype: 'multipart/form-data',
       success: data => {
-        console.log('ppp')
+        // console.log('ppp')
         setIsPending(false);
+        rerender();
       }
     })
   }
@@ -157,9 +159,9 @@ const NodeRow = ({node, handleClick}) => {
   return (
     <div className='node' key={node.name}>
       <div className='node__name'>{node.zone}</div>
-      <div className='node__status'>Status: <span className='dot'></span></div>
+      <div className='node__status'>Status: <span className={`dot ${node.status === 'RUNNING' ? '' : 'dot--is-terminated'}`}></span></div>
       <Button
-        text={isPending ? 'Terminating...' : node.status === 'RUNNING' ? 'Terminate' : 'Terminated'}
+        text={node.status === 'RUNNING' ? 'Terminate' : 'Terminated'}
         short='true'
         type={node.status === 'RUNNING' ? 'red' : 'disabled'}
         handleClick={() => handleNodeToggle(node)}

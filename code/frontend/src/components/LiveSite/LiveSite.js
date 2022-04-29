@@ -15,7 +15,7 @@ const LiveSite = () => {
   }, []);
 
   useEffect(() => {
-    console.log(iframeURL)
+    // console.log(iframeURL)
   }, [iframeURL]);
 
   const rotateIframeURL = () => {
