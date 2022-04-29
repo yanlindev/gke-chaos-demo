@@ -2,6 +2,7 @@
 Chaose Engnieering on GKE. Running the [Microservices demo](https://github.com/GoogleCloudPlatform/microservices-demo)
 
 ## Run Code Locally
+### Run Backend Locally
 ```
 pip3 install virtualenv
 python3 -m virtualenv venv
@@ -15,6 +16,22 @@ Run the following command
 ```
 deactivate
 ```
+### Run Frontend Locally ([node](https://nodejs.org/en/) needs to be installed)
+```
+cd 'code/frontend'
+npm install
+npm run start
+```
+Then front end will be served [locally](http://localhost:3000)(port 3000) and able to talk to 8080 over proxy.<br /><br />
+
+## Prepration for Deployment
+### Build Frontend
+```
+cd 'code/frontend'
+npm install
+npm run build
+```
+Then a /build folder will be built in 'frontend' and served by Flask.<br /><br />
 
 ## Config
 Config is either via local file [config.json](code/config.json) or recreating with environmental variables:<br />
