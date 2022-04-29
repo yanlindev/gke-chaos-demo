@@ -21,7 +21,7 @@ cd 'code/frontend'
 npm install
 npm run start
 ```
-Then front end will be served [locally](http://localhost:3000)(port 3000) and able to talk to 8080 over proxy.<br /><br />
+Then front end will be served [locally](http://localhost:3000)(port 3000) and able to talk to backend(port 8080) over proxy.<br /><br />
 
 ## Prepration for Deployment
 ### Build Frontend
