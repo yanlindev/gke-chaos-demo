@@ -1,5 +1,5 @@
 from crypt import methods
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, send_from_directory
 import json
 from handlers.helpers import helpers
 from handlers.gcp import gcp
@@ -8,14 +8,14 @@ from handlers.loadgen import loadgen
 import config
 
 ## Config App
-app = Flask(__name__)
+app = Flask(__name__, static_folder="frontend/build/static", template_folder="frontend/build")
 
 
 ## Default App Hosting
-@app.route("/", methods=['GET'])
+@app.route("/")
 def default():
-    ## Load Page
-    return render_template('index.html', monitor_page=config.dashboard_url)
+    ## Load Page from the frontend build folder
+    return render_template('index.html')
 
 ## Chaos Page
 @app.route("/chaos", methods=['GET'])
@@ -59,7 +59,7 @@ def removeinstance():
         return json.dumps({'success':False}), 400, {'ContentType':'application/json'} 
 
 ## Get Servers
-@app.route("/list-pods", methods=['GET'])
+@app.route("/list-pods")
 def list_pods():
     # API End Point for get all instances
     result = k8s.CreatePodList()
