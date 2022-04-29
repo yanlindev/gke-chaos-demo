@@ -10,7 +10,6 @@ source venv/bin/activate
 pip3 install -r code/requirements.txt
 python3 code/main.py
 ```
-Then you can browse the code [locally](http://localhost:8080).<br /><br />
 **Deactivate the environment** 
 Run the following command
 ```
@@ -31,7 +30,7 @@ cd 'code/frontend'
 npm install
 npm run build
 ```
-Then a /build folder will be built in 'frontend' and served by Flask.<br /><br />
+A /build folder will be built in 'frontend' and served by Flask.<br /><br />
 
 ## Config
 Config is either via local file [config.json](code/config.json) or recreating with environmental variables:<br />
